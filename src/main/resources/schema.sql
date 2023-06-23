@@ -14,6 +14,7 @@ CREATE TABLE
         email VARCHAR(50) NOT NULL,
         password VARCHAR(50) DEFAULT NULL,
         phone VARCHAR(20) DEFAULT NULL,
+        address VARCHAR(255) DEFAULT NULL,
         title VARCHAR(20) DEFAULT NULL,
         bio VARCHAR(200) DEFAULT NULL,
         enabled BOOLEAN DEFAULT FALSE,
