@@ -24,8 +24,7 @@ import java.util.UUID;
 import static java.util.Objects.requireNonNull;
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
 import static sheriff.customer.invoice.management.enumeration.VerificationType.ACCOUNT;
-import static sheriff.customer.invoice.management.query.UserQuery.COUNT_USER_EMAIL_QUERY;
-import static sheriff.customer.invoice.management.query.UserQuery.INSERT_USER_QUERY;
+import static sheriff.customer.invoice.management.query.UserQuery.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -52,8 +51,10 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             roleRepository.addRoleToUser(user.getId(), ROLE_USER.name());
 
             // send verification URL
-            String verification = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+            String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+
             // save URL in verification table
+            jdbc.update(INSERT_VERIFICATION_QUERY, Map.of("userId", user.getId(), "url", verificationUrl));
             // send email to user with verification URL
             // return the newly created user
             // if any errors, throw exception with proper message
