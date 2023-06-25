@@ -1,2 +1,3 @@
 # customer-invoice-api-java-springboot
-A customer invoice management api
+
+A customer invoice management api with user management
