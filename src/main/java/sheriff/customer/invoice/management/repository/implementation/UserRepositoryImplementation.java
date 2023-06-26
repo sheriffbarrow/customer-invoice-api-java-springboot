@@ -1,10 +1,8 @@
 package sheriff.customer.invoice.management.repository.implementation;
 
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -12,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import sheriff.customer.invoice.management.Exception.ApiException;
 import sheriff.customer.invoice.management.domain.Role;
 import sheriff.customer.invoice.management.domain.User;
@@ -20,10 +19,11 @@ import sheriff.customer.invoice.management.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
+import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
+import static sheriff.customer.invoice.management.enumeration.VerificationType.ACCOUNT;
 import static sheriff.customer.invoice.management.query.UserQuery.*;
 
 @Repository
@@ -51,7 +51,10 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             roleRepository.addRoleToUser(user.getId(), ROLE_USER.name());
 
             // send verification URL
+            String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+
             // save URL in verification table
+            jdbc.update(INSERT_VERIFICATION_QUERY, Map.of("userId", user.getId(), "url", verificationUrl));
             // send email to user with verification URL
             // return the newly created user
             // if any errors, throw exception with proper message
@@ -92,5 +95,9 @@ public class UserRepositoryImplementation implements UserRepository<User> {
                 .addValue("lastName", user.getLastName())
                 .addValue("email", user.getEmail())
                 .addValue("password", encoder.encode(user.getPassword()));
+    }
+
+    private String getVerificationUrl(String key, String type){
+        return ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/verify/" + type + "/" + key).toUriString();
     }
 }

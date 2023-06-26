@@ -1,6 +1,7 @@
 package sheriff.customer.invoice.management.repository;
 
 import sheriff.customer.invoice.management.domain.Role;
+
 import java.util.Collection;
 
 public interface RoleRepository<T extends Role> {
