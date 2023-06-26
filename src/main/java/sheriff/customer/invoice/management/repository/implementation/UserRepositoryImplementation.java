@@ -55,8 +55,14 @@ public class UserRepositoryImplementation implements UserRepository<User> {
 
             // save URL in verification table
             jdbc.update(INSERT_VERIFICATION_QUERY, Map.of("userId", user.getId(), "url", verificationUrl));
+
             // send email to user with verification URL
+            //emailSerivice.sendVerificationUrl(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
+            user.setEnabled(false);
+            user.setNotLocked(true);
+
             // return the newly created user
+            return user;
             // if any errors, throw exception with proper message
         }catch (EmptyResultDataAccessException exception) {
 
