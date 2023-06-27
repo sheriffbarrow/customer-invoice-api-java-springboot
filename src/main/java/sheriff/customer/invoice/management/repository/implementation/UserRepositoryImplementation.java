@@ -2,7 +2,6 @@ package sheriff.customer.invoice.management.repository.implementation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -11,7 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import sheriff.customer.invoice.management.Exception.ApiException;
+import sheriff.customer.invoice.management.exception.ApiException;
 import sheriff.customer.invoice.management.domain.Role;
 import sheriff.customer.invoice.management.domain.User;
 import sheriff.customer.invoice.management.repository.RoleRepository;
@@ -64,8 +63,6 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             // return the newly created user
             return user;
             // if any errors, throw exception with proper message
-        }catch (EmptyResultDataAccessException exception) {
-            throw new ApiException("No role found by name: " + ROLE_USER.name());
         }catch (Exception exception){}
         throw new ApiException("An error occurred. Please try again.");
     }

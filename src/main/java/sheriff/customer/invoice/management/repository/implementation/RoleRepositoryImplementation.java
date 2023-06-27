@@ -5,15 +5,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import sheriff.customer.invoice.management.Exception.ApiException;
+import sheriff.customer.invoice.management.exception.ApiException;
 import sheriff.customer.invoice.management.domain.Role;
 import sheriff.customer.invoice.management.repository.RoleRepository;
+import sheriff.customer.invoice.management.roleRowMapper.RoleRowMapper;
 
 import java.util.Collection;
 import java.util.Map;
 
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
-import static sheriff.customer.invoice.management.query.RoleQuery. *;
+import static sheriff.customer.invoice.management.query.RoleQuery.*;
 
 
 @Repository
