@@ -13,11 +13,14 @@ import java.util.Collection;
 import java.util.Map;
 
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
+import static sheriff.customer.invoice.management.query.RoleQuery. *;
+
 
 @Repository
 @RequiredArgsConstructor
 @Slf4j
 public class RoleRepositoryImplementation implements RoleRepository<Role> {
+
     private NamedParameterJdbcTemplate jdbc;
 
     @Override
