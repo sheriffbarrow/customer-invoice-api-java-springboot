@@ -22,7 +22,7 @@ import static sheriff.customer.invoice.management.query.RoleQuery.*;
 @Slf4j
 public class RoleRepositoryImplementation implements RoleRepository<Role> {
 
-    private NamedParameterJdbcTemplate jdbc;
+    public NamedParameterJdbcTemplate jdbc;
 
     @Override
     public Role create(Role data) {
