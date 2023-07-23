@@ -3,6 +3,7 @@ package sheriff.customer.invoice.management.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
+import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class HttpResponse {
     protected HttpStatus status;
     protected String reason;
     protected String message;
-    protected Strig developerMessage;
+    protected String developerMessage;
     protected Map<?, ?> data;
 }
 
