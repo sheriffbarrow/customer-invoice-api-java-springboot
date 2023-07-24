@@ -2,10 +2,7 @@ package sheriff.customer.invoice.management.repository.implementation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,12 +15,12 @@ import sheriff.customer.invoice.management.domain.User;
 import sheriff.customer.invoice.management.exception.ApiException;
 import sheriff.customer.invoice.management.repository.RoleRepository;
 import sheriff.customer.invoice.management.repository.UserRepository;
+import sheriff.customer.invoice.management.resource.UserResource;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
+import static java.util.Map.of;
 import static java.util.Objects.requireNonNull;
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
 import static sheriff.customer.invoice.management.enumeration.VerificationType.ACCOUNT;
@@ -47,18 +44,18 @@ public class UserRepositoryImplementation implements UserRepository<User> {
         try{
             KeyHolder holder = new GeneratedKeyHolder();
             SqlParameterSource parameters = getSqlParameterSource(user);
-            System.out.println(parameters);
             jdbc.update(INSERT_USER_QUERY, parameters, holder);
             user.setId(requireNonNull(holder.getKey()).longValue());
-
+            UserResource userResource = null;
+            userResource.saveUser(user);
             // add role to the user
             roleRepository.addRoleToUser(user.getId(), ROLE_USER.name());
 
             // send verification URL
             String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
-
+            System.out.println(verificationUrl);
             // save URL in verification table
-            jdbc.update(INSERT_VERIFICATION_QUERY, Map.of("userId", user.getId(), "url", verificationUrl));
+            jdbc.update(INSERT_VERIFICATION_QUERY, of("userId", user.getId(), "url", verificationUrl));
 
             // send email to user with verification URL
             //emailSerivice.sendVerificationUrl(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
@@ -66,10 +63,13 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             user.setNotLocked(true);
 
             // return the newly created user
+            System.out.println(user);
             return user;
             // if any errors, throw exception with proper message
-        }catch (Exception exception){}
-        throw new ApiException("An error occurred. Please try again.");
+        }catch (Exception exception){
+            throw new ApiException("An error occurred creating user. Please try again.");
+        }
+
     }
 
     @Override
@@ -93,7 +93,7 @@ public class UserRepositoryImplementation implements UserRepository<User> {
     }
 
     private Integer getEmailCount(String email){
-        return jdbc.queryForObject(COUNT_USER_EMAIL_QUERY, Map.of("email", email), Integer.class);
+        return jdbc.queryForObject(COUNT_USER_EMAIL_QUERY, of("email", email), Integer.class);
     }
 
     public SqlParameterSource getSqlParameterSource(User user) {
