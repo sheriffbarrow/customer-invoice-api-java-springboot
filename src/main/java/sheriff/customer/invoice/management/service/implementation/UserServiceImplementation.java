@@ -11,10 +11,9 @@ import sheriff.customer.invoice.management.service.UserService;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplementation implements UserService {
-    private final UserRepository<User> userUserRepository;
+    private final UserRepository<User> userRepository;
     @Override
     public UserDTO createUser(User user) {
-
-        return UserDTOMapper.fromUser(userUserRepository.create(user));
+        return UserDTOMapper.fromUser(userRepository.create(user));
     }
 }

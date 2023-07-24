@@ -12,6 +12,7 @@ import sheriff.customer.invoice.management.roleRowMapper.RoleRowMapper;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 import static sheriff.customer.invoice.management.enumeration.RoleType.ROLE_USER;
 import static sheriff.customer.invoice.management.query.RoleQuery.*;
@@ -22,7 +23,7 @@ import static sheriff.customer.invoice.management.query.RoleQuery.*;
 @Slf4j
 public class RoleRepositoryImplementation implements RoleRepository<Role> {
 
-    public NamedParameterJdbcTemplate jdbc;
+    private final NamedParameterJdbcTemplate jdbc;
 
     @Override
     public Role create(Role data) {
@@ -54,11 +55,11 @@ public class RoleRepositoryImplementation implements RoleRepository<Role> {
         log.info("Adding role {} to user id: {}", roleName, userId);
         try{
              Role role = jdbc.queryForObject(SELECT_ROLE_BY_NAME_QUERY, Map.of("roleName", roleName), new RoleRowMapper());
-             jdbc.update(INSERT_ROLE_TO_USER_QUERY, Map.of("userId", userId, "roleId", role.getId()));
+             jdbc.update(INSERT_ROLE_TO_USER_QUERY, Map.of("userId", userId, "roleId", Objects.requireNonNull(role).getId()));
         }catch (EmptyResultDataAccessException exception) {
             throw new ApiException("No role found by name: " + ROLE_USER.name());
         }catch (Exception exception){}
-        throw new ApiException("An error occurred. Please try again.");
+        throw new ApiException("An error occurred adding role. Please try again.");
     }
 
     @Override
