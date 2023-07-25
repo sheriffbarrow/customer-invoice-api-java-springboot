@@ -15,7 +15,6 @@ import sheriff.customer.invoice.management.domain.User;
 import sheriff.customer.invoice.management.exception.ApiException;
 import sheriff.customer.invoice.management.repository.RoleRepository;
 import sheriff.customer.invoice.management.repository.UserRepository;
-import sheriff.customer.invoice.management.resource.UserResource;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -46,8 +45,7 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             SqlParameterSource parameters = getSqlParameterSource(user);
             jdbc.update(INSERT_USER_QUERY, parameters, holder);
             user.setId(requireNonNull(holder.getKey()).longValue());
-            UserResource userResource = null;
-            userResource.saveUser(user);
+
             // add role to the user
             roleRepository.addRoleToUser(user.getId(), ROLE_USER.name());
 
