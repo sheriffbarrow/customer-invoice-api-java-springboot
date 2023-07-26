@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS
         first_name VARCHAR(50) NOT NULL,
         last_name VARCHAR(50) NOT NULL,
         email VARCHAR(50) NOT NULL,
-        password VARCHAR(50) DEFAULT NULL,
+        password VARCHAR(500) DEFAULT NULL,
         phone VARCHAR(20) DEFAULT NULL,
         address VARCHAR(255) DEFAULT NULL,
         title VARCHAR(20) DEFAULT NULL,
