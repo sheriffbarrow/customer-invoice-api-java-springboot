@@ -65,6 +65,7 @@ public class UserRepositoryImplementation implements UserRepository<User> {
             return user;
             // if any errors, throw exception with proper message
         }catch (Exception exception){
+            log.error(exception.getMessage());
             throw new ApiException("An error occurred creating user. Please try again.");
         }
 
