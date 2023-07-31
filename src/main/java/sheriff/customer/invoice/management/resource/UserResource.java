@@ -27,7 +27,7 @@ public class UserResource {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<HttpResponse> saveUser(@RequestBody @Validated User user){
+    public ResponseEntity<HttpResponse> saveUser(@RequestBody @Valid User user){
         UserDTO userDTO = userService.createUser(user);
         return ResponseEntity.created(getUri()).body(
                 HttpResponse.builder()
