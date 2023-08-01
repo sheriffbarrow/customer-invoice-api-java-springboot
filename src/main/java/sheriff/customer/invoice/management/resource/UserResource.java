@@ -21,7 +21,7 @@ import static java.time.LocalDateTime.now;
 import static java.util.Map.*;
 
 @RestController
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/api/user")
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
